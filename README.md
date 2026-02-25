@@ -39,16 +39,6 @@ Practice collection for testing Trello REST API endpoints.
 
 ---
 
-## ⚙️ How to Run
-
-You can run these collections using:
-
-- Postman (manually)
-- Newman (CLI)
-- Jenkins (for CI practice)
-
----
-
 ## 🚀 Future Additions
 
 This repository will be updated with:
