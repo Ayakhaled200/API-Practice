@@ -1,0 +1,664 @@
+{
+  "info": {
+    "_postman_id": "5d337164-570b-4b98-8539-da59c415e6ee",
+    "name": "Reqres",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44132585",
+    "_collection_link": "https://go.postman.co/collection/44132585-5d337164-570b-4b98-8539-da59c415e6ee?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "List Single User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "\r",
+              "const response = pm.response.json();\r",
+              "\r",
+              "/*\r",
+              "========================\r",
+              " Root structure\r",
+              "========================\r",
+              "*/\r",
+              "pm.test(\"Response has main objects\", function () {\r",
+              "    pm.expect(response).to.have.all.keys('data', 'support', '_meta');\r",
+              "});\r",
+              "\r",
+              "/*\r",
+              "========================\r",
+              " Data object structure\r",
+              "========================\r",
+              "*/\r",
+              "pm.test(\"Data object has correct structure\", function () {\r",
+              "    pm.expect(response.data).to.have.all.keys(\r",
+              "        'id',\r",
+              "        'email',\r",
+              "        'first_name',\r",
+              "        'last_name',\r",
+              "        'avatar'\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "/*\r",
+              "========================\r",
+              " Data object types & values\r",
+              "========================\r",
+              "*/\r",
+              "pm.test(\"Data object fields have correct types\", function () {\r",
+              "    pm.expect(response.data.id).to.be.a('number');\r",
+              "    pm.expect(response.data.first_name).to.be.a('string');\r",
+              "    pm.expect(response.data.last_name).to.be.a('string');\r",
+              "    pm.expect(response.data.avatar).to.be.a('string');\r",
+              "    pm.expect(response.data.avatar).to.match(/^https?:\\/\\/.+/);\r",
+              "});\r",
+              "\r",
+              "//validate email formate\r",
+              "pm.test(\"Email format is valid\", function () {\r",
+              "    email = response.data.email;\r",
+              "\r",
+              "    pm.expect(email).to.be.a('string');\r",
+              "\r",
+              "    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\r",
+              "    pm.expect(email).to.match(emailRegex);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/users/613",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "613"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Users",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "\r",
+              "const response = pm.response.json();\r",
+              "\r",
+              "/*\r",
+              "========================\r",
+              " Pagination details\r",
+              "========================\r",
+              "*/\r",
+              "pm.test(\"Pagination details are correct\", function () {\r",
+              "    pm.expect(response.page).to.be.a('number');\r",
+              "    pm.expect(response.per_page).to.be.a('number');\r",
+              "    pm.expect(response.total).to.be.a('number');\r",
+              "    pm.expect(response.total_pages).to.be.a('number');\r",
+              "});\r",
+              "\r",
+              "/*\r",
+              "========================\r",
+              " Data array & users structure\r",
+              "========================\r",
+              "*/\r",
+              "pm.test(\"Data is an array and contains user objects\", function () {\r",
+              "    pm.expect(response.data).to.be.an('array');\r",
+              "\r",
+              "    response.data.forEach(function (user) {\r",
+              "        pm.expect(user).to.have.all.keys(\r",
+              "            'id',\r",
+              "            'email',\r",
+              "            'first_name',\r",
+              "            'last_name',\r",
+              "            'avatar'\r",
+              "        );\r",
+              "\r",
+              "        pm.expect(user.id).to.be.a('number');\r",
+              "        pm.expect(user.email).to.be.a('string');\r",
+              "        pm.expect(user.first_name).to.be.a('string');\r",
+              "        pm.expect(user.last_name).to.be.a('string');\r",
+              "        pm.expect(user.avatar).to.be.a('string');\r",
+              "    });\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/users?page=2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Resource",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/unknown",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "unknown"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Single Resource",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/unknown/2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "unknown",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Not Found Resource",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response body is empty JSON object\", function () {\r",
+              "    pm.expect(pm.response.json()).to.eql({});\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/unknown/23",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "unknown",
+            "23"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delayed Response",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/users?delay=3",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "delay",
+              "value": "3"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"eve.holt@reqres.in\",\r\n  \"password\": \"pistol\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create User Unsuccessful",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{   \r\n    \"email\": \"sydney@fife\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login unsuccessful",
+      "request": {
+        "auth": {
+          "type": "apikey",
+          "apikey": [
+            {
+              "key": "value",
+              "value": "reqres_de1a84a3b8294cef99ff62ebfc9b9d1b",
+              "type": "string"
+            },
+            {
+              "key": "key",
+              "value": "x-api-key",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"peter@klaven\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Successful",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"eve.holt@reqres.in\",\r\n  \"password\": \"pistol\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update User",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"morpheus\",\r\n    \"job\": \"zion resident\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/users/2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update User Copy",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"morpheus\",\r\n    \"job\": \"zion resident\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/users/2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete User",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/users/2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Users 2",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Generate random number between 1 and 10000\r",
+              "const randomNumber = Math.floor(Math.random() * 10000) + 1;\r",
+              "pm.environment.set(\"random_number\", randomNumber);\r",
+              "\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const data = pm.response.json();\r",
+              "pm.test(\"status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{ApiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"name\": \"Aya_{{random_number}}\" ,\r\n\"job\" : \"tester\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/users",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "apikey"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "\r",
+          "pm.test(\"Resonable Response time\", function () {\r",
+          "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+          "});"
+        ]
+      }
+    }
+  ]
+}
